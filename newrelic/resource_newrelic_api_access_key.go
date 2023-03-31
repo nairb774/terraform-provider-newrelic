@@ -34,7 +34,7 @@ func resourceNewRelicAPIAccessKey() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"account_id": {
 				Type:     schema.TypeInt,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 			},
 
@@ -105,17 +105,15 @@ func resourceNewrelicAPIAccessKeyImport(ctx context.Context, d *schema.ResourceD
 }
 
 func resourceNewRelicAPIAccessKeyCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*ProviderConfig).NewClient
+	providerConfig := meta.(*ProviderConfig)
+	client := providerConfig.NewClient
 
 	// Define initial keys to create an API access key.
 	opts := apiaccess.APIAccessCreateInput{}
 
 	// Get the account id. This is required regardless of key type.
-	var accountID int
-	if v, ok := d.GetOk("account_id"); ok {
-		accountID = v.(int)
-		log.Printf("[DEBUG] new api access account_id: %d", accountID)
-	}
+	accountID := selectAccountID(providerConfig, d)
+	log.Printf("[DEBUG] new api access account_id: %d", accountID)
 
 	// Get the key type.
 	keyType := getAPIAccessKeyType(d)

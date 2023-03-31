@@ -37,7 +37,7 @@ resource "newrelic_api_access_key" "foobar" {
 
 The following arguments are supported:
 
-- `account_id` - (Required) The New Relic account ID of the account you wish to create the API access key.
+- `account_id` - (Optional) The New Relic account ID of the account you wish to create the API access key. If not provided, the provider's `account_id` value will be used.
 - `key_type` - (Required) What type of API key to create. Valid options are `INGEST` or `USER`, case-sensitive.
 - `ingest_type` - (Optional) Required if `key_type = INGEST`. Valid options are `BROWSER` or `LICENSE`, case-sensitive.
 - `user_id` - (Optional) Required if `key_type = USER`. The New Relic user ID yous wish to create the API access key for in an account.
